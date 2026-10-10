@@ -113,5 +113,15 @@ edge on its line.
 - **ytq and dlq move to `cursed`** on their `bewitched` branches, then
   restyle screen by screen with `Window.draw`. Not merged without the owner's
   go-ahead.
+- **Planned by the owner, for other agents (2026-10-10), not to be built
+  here unasked:** ytq and dlq will get **on-screen buttons** alongside their
+  keys, probably **scrollbars**, and their **touch (wheel) scrolling will be
+  removed**. Keep bewitch from closing that off: `terminal.Decoder` already
+  reports taps with cell positions, `cursed` delivers them to an app that puts
+  `BUTTON1_PRESSED` in its `mousemask`, and `getmouse()` gives the position.
+  What that work will want from bewitch is a button recipe and hit-testing —
+  Lip Gloss v2's `Layer`/`Compositor` (ids on composed blocks, a hit lookup by
+  cell) is the thing to port for it. The house style's "a tap never presses a
+  key" describes today's screens; a button is the deliberate exception.
 - Curses and Rich adapters, when something needs them.
 - Lip Gloss's `table`, `list` and `tree` sub-packages, `Blend2D`, hyperlinks.
