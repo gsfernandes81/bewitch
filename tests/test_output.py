@@ -136,8 +136,8 @@ def test_without_colour_a_checkbox_still_says_whether_it_is_ticked():
     for boxed in (False, True):
         ticked = ansi.render(bubbles.checkbox("go", True, 12, boxed), Profile.ASCII)
         unticked = ansi.render(bubbles.checkbox("go", False, 12, boxed), Profile.ASCII)
-        assert glyphs.CHECK in ticked and "\x1b[0;1m" in ticked
-        assert glyphs.BULLET in unticked and "\x1b[0;1m" not in unticked
+        assert glyphs.CHECK in ticked and glyphs.BULLET not in ticked
+        assert glyphs.BULLET in unticked and glyphs.CHECK not in unticked
 
 
 @given(

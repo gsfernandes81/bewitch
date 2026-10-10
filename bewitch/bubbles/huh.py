@@ -2,7 +2,8 @@
 
 Follows the Charm theme (``ThemeCharm``) of
 `huh <https://github.com/charmbracelet/huh>`_ v2.0.3, which marks a ticked
-option ``✓`` in green and an unticked one ``•`` in grey. Like the rest of
+option ``✓``, its label in green, and an unticked one ``•`` in grey, its
+label in the plain text colour. Like the rest of
 :mod:`bewitch.bubbles` this is the drawing half only: the app holds whether
 a box is ticked and flips it on a key or a tap; bewitch draws what it is
 told, exactly as wide as it is told.
@@ -23,10 +24,10 @@ def _mark(label: str, checked: bool, width: int, theme: Theme) -> Row:
         return []
     if checked:
         row = to_row(glyphs.CHECK, Pen(fg=theme.success))
-        pen = Pen(fg=theme.fg_base, bold=True)
+        pen = Pen(fg=theme.success)
     else:
         row = to_row(glyphs.BULLET, Pen(fg=theme.fg_most_subtle))
-        pen = Pen(fg=theme.fg_more_subtle)
+        pen = Pen(fg=theme.fg_base)
     if label and width >= 3:
         text = truncate_row(to_row(label, pen), width - 2, to_row(glyphs.ELLIPSIS, pen))
         row += blank(1) + text
@@ -42,11 +43,10 @@ def checkbox(
 ) -> Block:
     """``✓ label`` / ``• label``, exactly *width* columns.
 
-    Ticked, the ``✓`` is in ``success`` and the label bold in ``fg_base``;
-    unticked, the ``•`` is in ``fg_most_subtle`` and the label in
-    ``fg_more_subtle``. With colour gone the glyph and the bold weight still
-    say which it is. Both glyphs take the same column, so ticking never
-    shifts the label.
+    As huh's Charm theme draws an option: ticked, the ``✓`` and the label
+    are in ``success``; unticked, the ``•`` is in ``fg_most_subtle`` and the
+    label in ``fg_base``. With colour gone the glyph still says which it is.
+    Both glyphs take the same column, so ticking never shifts the label.
 
     *boxed* draws it as a three-row tap target, the height of a button: a
     rounded border in ``success`` when ticked and ``fg_most_subtle`` when
