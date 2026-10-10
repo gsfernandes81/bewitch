@@ -22,6 +22,7 @@ packages = ["bewitch"]
 [dependency-groups]
 dev = [
     "hypothesis>=6.167.1",
+    "pyte>=0.8.2",
     "pytest>=8",
 ]
 lint = ["ruff==0.16.4"]

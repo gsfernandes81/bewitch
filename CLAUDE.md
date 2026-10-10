@@ -63,6 +63,20 @@ Decisions that travel with this code:
 - **`screen.Frame` writes nothing for an unchanged screen** — no cursor
   move, no sync marker. ytq's idle-screen test (zero bytes over idle seconds)
   depends on it; `test_an_unchanged_screen_writes_nothing_at_all` holds it.
+- **No blessed — `bewitch.terminal` instead.** blessed was the first choice
+  for keys and modes. Measured 2026-10-10 under a pty that answers nothing,
+  blessed 1.50 sent ten XTGETTCAP queries and a cursor-position request while
+  constructing a `Terminal` and waited **5.1 s**, and without its mouse mode
+  on it split an SGR wheel report into keystrokes (`<`, `6`, `4`, `;`) — keys
+  pressed by a flick, on screens where keys spend data. `terminal.Decoder`'s
+  rule: a byte that began an escape sequence is never delivered as a key;
+  unknown or cut-off sequences are dropped whole. A property test holds that
+  over arbitrary splits. And nothing is asked of the terminal.
+- **`cursed` is a facade, not a fork of curses.** It covers the slice ytq and
+  dlq use, with curses' own constant values, so moving off curses is one
+  import and can be checked by the apps' existing suites before any screen is
+  restyled. Mouse reports outside `mousemask` are dropped inside `getch` —
+  that is where "a tap never presses a key" now lives.
 - **Standard library only.** The phone uses this from a checkout beside ytq
   and dlq, with nothing installed. A dependency would need a very good reason.
 
@@ -80,6 +94,10 @@ runs. Offline, a few seconds.
   their limit, a wrap never loses a word, joins add up.
 - `test_screen.py` — the canvas never grows and never holds half a wide
   character; the frame writes only changed lines, and nothing for none.
+- `test_terminal.py` — the decoder's split-invariance and its rule about
+  escape bytes, as properties; then `cursed` driving a real app under a pty,
+  read back with pyte: keys arrive with curses' codes, a tap never arrives,
+  and an idle screen writes zero bytes.
 - `test_output.py` — the ANSI adapter, every recipe at exactly its width,
   the glyph rules, and the **reference renders**: byte-for-byte against
   `tests/golden/*.ans`. A deliberate visual change is re-recorded with
@@ -92,8 +110,8 @@ edge on its line.
 
 ## What is next
 
-- **ytq and dlq move from curses to blessed** on their `bewitched` branches,
-  drawing through `Canvas` and `screen.Frame`; blessed reads the keys and the
-  wheel. Not merged without the owner's go-ahead.
+- **ytq and dlq move to `cursed`** on their `bewitched` branches, then
+  restyle screen by screen with `Window.draw`. Not merged without the owner's
+  go-ahead.
 - Curses and Rich adapters, when something needs them.
 - Lip Gloss's `table`, `list` and `tree` sub-packages, `Blend2D`, hyperlinks.
