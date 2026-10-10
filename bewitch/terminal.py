@@ -5,13 +5,16 @@ that delivers keys as they are pressed (cbreak), the alternate screen, a
 hidden cursor, application keypad mode, wheel reporting — and a decoder that
 turns the bytes the terminal sends back into keys and wheel steps.
 
-This exists instead of blessed, which was the first choice, because of what
-blessed 1.50 did on a terminal that does not answer its queries (measured
-2026-10-10): it sent ten XTGETTCAP capability queries and a cursor-position
-request while it was being constructed and **waited five seconds** for
-answers, and without its own mouse mode switched on it split a wheel report
-into separate keystrokes — ``<``, ``6``, ``4``, ``;`` — every one of which
-could have pressed a key on a screen where keys spend data.
+This exists instead of blessed, which was the first choice. Measured
+2026-10-10 under a pty: on a terminal that answers a cursor-position request
+blessed 1.50 starts quickly (about 0.1 s to import, 0.01 s to construct), but
+on one that answers nothing it waits out its query timeout — five seconds by
+default — while constructing. The deciding problem was the wheel: blessed
+decodes SGR mouse reports only once its mouse mode is on, and it switches that
+on only if the terminal answers a DECRQM mode query. Where the terminal does
+not answer, a wheel report arrives as separate keystrokes — ``<``, ``6``,
+``4``, ``;`` — any of which could press a key on a screen where keys spend
+data.
 
 So the decoder here holds one rule above the rest: **a byte that began an
 escape sequence is never delivered as a key.** A mouse report, a key the

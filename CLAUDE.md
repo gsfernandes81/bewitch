@@ -64,14 +64,18 @@ Decisions that travel with this code:
   move, no sync marker. ytq's idle-screen test (zero bytes over idle seconds)
   depends on it; `test_an_unchanged_screen_writes_nothing_at_all` holds it.
 - **No blessed — `bewitch.terminal` instead.** blessed was the first choice
-  for keys and modes. Measured 2026-10-10 under a pty that answers nothing,
-  blessed 1.50 sent ten XTGETTCAP queries and a cursor-position request while
-  constructing a `Terminal` and waited **5.1 s**, and without its mouse mode
-  on it split an SGR wheel report into keystrokes (`<`, `6`, `4`, `;`) — keys
-  pressed by a flick, on screens where keys spend data. `terminal.Decoder`'s
-  rule: a byte that began an escape sequence is never delivered as a key;
-  unknown or cut-off sequences are dropped whole. A property test holds that
-  over arbitrary splits. And nothing is asked of the terminal.
+  for keys and modes. Measured 2026-10-10 under a pty: with a terminal that
+  answers a cursor-position request it starts in ~0.1 s; with one that answers
+  nothing it waits out its 5 s query timeout. What decided it is the wheel:
+  blessed decodes SGR mouse reports only if the terminal answers a DECRQM
+  query, and otherwise splits a wheel report into keystrokes (`<`, `6`, `4`,
+  `;`) — keys pressed by a flick, on screens where keys spend data. Whether
+  Termux answers DECRQM was not checked. prompt_toolkit's `Vt100Parser`
+  decodes split mouse reports correctly with no queries, but costs ~0.29 s to
+  import; `bewitch.terminal` costs ~0.02 s. `terminal.Decoder`'s rule: a byte
+  that began an escape sequence is never delivered as a key; unknown or
+  cut-off sequences are dropped whole. A property test holds that over
+  arbitrary splits. And nothing is asked of the terminal.
 - **`cursed` is a facade, not a fork of curses.** It covers the slice ytq and
   dlq use, with curses' own constant values, so moving off curses is one
   import and can be checked by the apps' existing suites before any screen is
