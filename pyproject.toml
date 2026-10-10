@@ -1,0 +1,30 @@
+[project]
+name = "bewitch"
+version = "0.1.0"
+description = "A Python port of Charm's Lip Gloss and charmtone. Not affiliated with Charm."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+# Deliberately empty: bewitch is stdlib only, so a phone can use it from a
+# checkout with nothing installed, the way ytq and dlq find each other.
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["bewitch"]
+
+# The same two-group plan as ytq: `uv sync` installs dev (pure Python, so it
+# installs anywhere, the phone included); lint is separate because Termux
+# ships a native ruff and uv cannot install ruff on Android.
+[dependency-groups]
+dev = [
+    "hypothesis>=6.167.1",
+    "pytest>=8",
+]
+lint = ["ruff==0.16.4"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

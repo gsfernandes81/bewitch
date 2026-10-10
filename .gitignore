@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+
+# uv-managed dev environment (make dev)
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# hypothesis's example database
+.hypothesis/

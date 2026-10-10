@@ -1,0 +1,15 @@
+# The same ruleset as ytq and dlq, which this sits beside on the phone.
+line-length = 90
+target-version = "py311"
+
+[lint]
+select = ["F", "E4", "E7", "E9", "B", "UP", "SIM"]
+ignore = [
+    # `"%d" % x` truncates a float; `f"{x:d}"` raises ValueError on one.
+    "UP031",
+]
+
+[lint.per-file-ignores]
+# charmtone keeps Charm's own names (`charmtone.Charple`) so its docs read
+# across; they are constants, spelled the way their source spells them.
+"bewitch/charmtone.py" = ["N816"]
