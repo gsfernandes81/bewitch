@@ -34,15 +34,32 @@ def short_help(
     bindings: Sequence[tuple[str, str]],
     width: int,
     theme: Theme = CHARM,
-    separator: str = " • ",
+    separator: str | Sequence[str] = (" • ", "  "),
 ) -> Block:
     """``key desc • key desc``, as Bubbles' ``ShortHelpView`` draws it.
 
-    Pairs are added whole until the next would not fit; then, if there is
-    room, an ellipsis says some were left out — the same rule as Bubbles, so
-    a hint is never shown cut in half. Keys are a shade lighter than their
-    descriptions, and the separator quieter than both, as in Crush.
+    *separator* may be several, tried in order: the first that lets every
+    pair fit is used. The default tries Bubbles' `` • `` and then two plain
+    spaces, because on a phone the dot is what goes before a key does — a
+    hint line missing its last pair is usually missing the way out.
+
+    If no separator fits them all, pairs are added whole until the next would
+    not fit; then, if there is room, an ellipsis says some were left out —
+    the same rule as Bubbles, so a hint is never shown cut in half. Keys are
+    a shade lighter than their descriptions, and the separator quieter than
+    both, as in Crush.
     """
+    options = [separator] if isinstance(separator, str) else list(separator)
+    for sep in options:
+        row, complete = _help_row(bindings, width, theme, sep)
+        if complete:
+            return _block(row, width)
+    return _block(row, width)
+
+
+def _help_row(
+    bindings: Sequence[tuple[str, str]], width: int, theme: Theme, separator: str
+) -> tuple[Row, bool]:
     key_pen = Pen(fg=theme.fg_more_subtle)
     desc_pen = Pen(fg=theme.fg_most_subtle)
     sep_pen = Pen(fg=theme.separator)
@@ -57,10 +74,10 @@ def short_help(
             tail = to_row(" " + glyphs.ELLIPSIS, sep_pen)
             if used + row_width(tail) < width:
                 row += tail
-            break
+            return row, False
         row += item
         used += w
-    return _block(row, width)
+    return row, True
 
 
 # Progress --------------------------------------------------------------------

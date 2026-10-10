@@ -120,6 +120,14 @@ def test_help_adds_pairs_whole_or_says_it_stopped(width, bindings):
         assert text.endswith(glyphs.ELLIPSIS) or string_width(text) >= width - 2
 
 
+def test_help_gives_up_the_dot_before_it_gives_up_a_pair():
+    pairs = [("↑↓", "pick"), ("⏎", "quality"), ("/", "new"), ("q", "back")]
+    roomy = bubbles.short_help(pairs, 40).plain()
+    tight = bubbles.short_help(pairs, 33).plain()
+    assert "•" in roomy
+    assert "•" not in tight and tight.rstrip().endswith("q back")
+
+
 @given(widths, st.floats(0, 1))
 def test_the_progress_bar_is_exactly_its_width(width, percent):
     assert bubbles.progress_bar(percent, width).width == width

@@ -57,6 +57,13 @@ of escape sequences, so the same render can go to:
 | `bewitch.glyphs` | — | the glyphs Crush draws with, each tested on a phone, each with an ASCII stand-in |
 | `bewitch.terminal` | — | cbreak, the alternate screen, keypad and wheel modes, and a key decoder that never turns a mouse report into keys — standard library only, no terminal queries |
 
+## The house style
+
+[docs/house-style.md](docs/house-style.md) is the standard every screen built on
+bewitch follows: the anatomy of a screen, colour by role, selection, marks,
+dialogs, glyphs, how things give way at 32 columns, and how to move a curses
+screen over.
+
 ## The gallery
 
 ```sh
