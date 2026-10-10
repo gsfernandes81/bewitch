@@ -71,7 +71,7 @@ Decisions that travel with this code:
   for ytq and dlq (2026-10-10). A curses stand-in (`bewitch.cursed`, with its
   own key reader `bewitch.terminal`) was built to move ytq and dlq off curses
   in one step; the owner judged it scope creep for a styling library, so it
-  lives on the `bewitched` branch with ytq's and dlq's `bewitched` branches,
+  lives on the `cursed` branch, beside ytq's and dlq's `bewitched` branches,
   and is not on main. Do not bring an input layer back here.
 - **What was learned about blessed, for whoever builds on it.** Measured
   2026-10-10 under a pty: blessed 1.50 starts in ~0.1 s on a terminal that
@@ -112,7 +112,7 @@ edge on its line.
 ## What is next
 
 - **ytq and dlq**: restyled on their `bewitched` branches (drawn through the
-  stand-in on bewitch's `bewitched` branch), not merged. The owner is having
+  stand-in on bewitch's `cursed` branch), not merged. The owner is having
   them rebuilt on blessed, with on-screen buttons, by other agents.
 - **Planned by the owner, for other agents (2026-10-10), not to be built
   here unasked:** ytq and dlq will get **on-screen buttons** alongside their
