@@ -164,3 +164,64 @@ def status(
                 to_row(glyphs.ELLIPSIS, Pen(fg=theme.fg_most_subtle)),
             )
     return _exact(row, width)
+
+
+def dialog(
+    title: str,
+    body: Block | Sequence[str] | str,
+    width: int,
+    keys: Sequence[tuple[str, str]] = (),
+    theme: Theme = CHARM,
+) -> Block:
+    """A box drawn over a screen: Crush's dialog.
+
+    A rounded border in the primary colour, :func:`dialog_title` on the first
+    row inside, *body* below it (a Block, or text — a string or one string per
+    line, wrapped to fit), and *keys* as a help line on the last row. Exactly
+    *width* columns wide; as tall as its content. Compose it over the screen
+    with a :class:`~bewitch.lipgloss.Canvas` rather than clearing first, so
+    what is behind it stays visible behind it.
+    """
+    from bewitch.bubbles.widgets import short_help
+    from bewitch.lipgloss import LEFT, Style, join_vertical, rounded_border
+
+    inner = max(1, width - 4)  # border and one column of padding each side
+    if isinstance(body, Block):
+        content = Style().width(inner).render(body)
+    else:
+        text = body if isinstance(body, str) else "\n".join(body)
+        content = Style().foreground(theme.fg_base).width(inner).render(text)
+    parts = [dialog_title(title, inner, theme), Block.text(""), content]
+    if keys:
+        parts += [Block.text(""), short_help(keys, inner, theme)]
+    box = (
+        Style()
+        .border(rounded_border())
+        .border_foreground(theme.primary)
+        .padding(0, 1)
+        .width(width)
+    )
+    return box.render(join_vertical(LEFT, *parts))
+
+
+def wait_box(text: str, tick: int, width: int, theme: Theme = CHARM) -> Block:
+    """A dialog that only says what is being waited for, with a spinner.
+
+    *tick* picks the spinner frame; the caller advances it, so a wait costs a
+    redraw per frame and nothing once it is over.
+    """
+    from bewitch.bubbles.spinner import Dot
+    from bewitch.lipgloss import Style, rounded_border
+
+    inner = max(1, width - 4)
+    frame = Dot.frame(tick)
+    row = to_row(frame, Pen(fg=theme.secondary)) + to_row(text, Pen(fg=theme.fg_base))
+    line = _exact(row, inner)
+    box = (
+        Style()
+        .border(rounded_border())
+        .border_foreground(theme.primary)
+        .padding(0, 1)
+        .width(width)
+    )
+    return box.render(line)

@@ -109,7 +109,14 @@ def test_a_mark_never_shifts_the_title():
 
 
 @given(
-    widths, st.lists(st.tuples(st.sampled_from(["↑↓", "⏎", "q", "/"]), lines), max_size=6)
+    widths,
+    st.lists(
+        st.tuples(
+            st.sampled_from(["↑↓", "⏎", "q", "/", "esc", "tab"]), lines.map(str.strip)
+        ),
+        max_size=6,
+        unique_by=lambda pair: pair[0],
+    ),
 )
 def test_help_adds_pairs_whole_or_says_it_stopped(width, bindings):
     block = bubbles.short_help(bindings, width)
@@ -153,6 +160,20 @@ def test_the_thumb_is_at_the_top_first_and_the_bottom_last(height, total, visibl
     assert bubbles.scroll_thumb(height, total, visible, 0)[0] == 0
     start, length = bubbles.scroll_thumb(height, total, visible, total - visible)
     assert start + length == height
+
+
+@given(st.integers(20, 80), lines, st.lists(lines, max_size=4), st.booleans())
+def test_a_dialog_is_exactly_its_width_and_rounded(width, title, body, with_keys):
+    keys = [("⏎", "ok"), ("esc", "back")] if with_keys else []
+    box = bubbles.dialog(title or "x", body, width, keys=keys)
+    assert box.width == width
+    text = box.plain().split("\n")
+    assert text[0].startswith("╭") and text[-1].startswith("╰")
+
+
+@given(st.integers(20, 80), lines, st.integers(0, 50))
+def test_a_wait_box_is_exactly_its_width(width, text, tick):
+    assert bubbles.wait_box(text, tick, width).width == width
 
 
 def test_spinner_frames_cycle():

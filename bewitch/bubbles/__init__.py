@@ -13,7 +13,15 @@ titles, labels and status rows.
 """
 
 from bewitch.bubbles import spinner
-from bewitch.bubbles.crush import dialog_title, header, section, status, tag
+from bewitch.bubbles.crush import (
+    dialog,
+    dialog_title,
+    header,
+    section,
+    status,
+    tag,
+    wait_box,
+)
 from bewitch.bubbles.spinner import Spinner
 from bewitch.bubbles.widgets import (
     list_item,
@@ -26,6 +34,7 @@ from bewitch.bubbles.widgets import (
 
 __all__ = [
     "Spinner",
+    "dialog",
     "dialog_title",
     "header",
     "list_item",
@@ -38,4 +47,5 @@ __all__ = [
     "spinner",
     "status",
     "tag",
+    "wait_box",
 ]

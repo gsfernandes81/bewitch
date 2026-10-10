@@ -191,6 +191,14 @@ def pieces(width: int) -> Block:
             icon_color=t.success,
         ),
         bubbles.paginator_dots(1, 5),
+        Block.text(""),
+        bubbles.dialog(
+            "Queue it?",
+            "Chillhop Essentials · Winter 2025, 720p, about 410 MiB tonight.",
+            width,
+            keys=[("⏎", "queue"), ("esc", "back")],
+        ),
+        bubbles.wait_box("asking YouTube for the formats", 0, width),
     )
 
 
