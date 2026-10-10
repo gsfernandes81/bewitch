@@ -8,3 +8,6 @@ __pycache__/
 
 # hypothesis's example database
 .hypothesis/
+
+# uv build
+dist/

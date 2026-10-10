@@ -11,7 +11,7 @@ purpose: `bewitch.lipgloss` is our port of Lip Gloss, `bewitch.charmtone` of
 charmtone, `bewitch.bubbles` of the drawing half of Bubbles. Naming them so is
 the credit — Charm's work is MIT-licensed, we copied it into another language,
 and we would rather say so than file the names off. See
-[THIRD_PARTY.md](THIRD_PARTY.md).
+[THIRD_PARTY.md](https://github.com/gsfernandes81/bewitch/blob/main/THIRD_PARTY.md).
 
 ```python
 from bewitch import bubbles, charmtone
@@ -56,7 +56,7 @@ of escape sequences, so the same render can go to:
 
 ## The house style
 
-[docs/house-style.md](docs/house-style.md) is the standard every screen built on
+[docs/house-style.md](https://github.com/gsfernandes81/bewitch/blob/main/docs/house-style.md) is the standard every screen built on
 bewitch follows: the anatomy of a screen, colour by role, selection, marks,
 dialogs, glyphs, how things give way at 32 columns, and how to move a curses
 screen over.
@@ -86,9 +86,24 @@ Detection follows Charm's `colorprofile`, plus three rules:
 
 ## Using it
 
-bewitch is standard library only. Use it from a checkout — put the checkout
-on `sys.path`, the way ytq and dlq find each other — or install it with
-`pip install -e .`.
+bewitch is standard library only. Install it from PyPI:
+
+```sh
+pip install bewitch
+```
+
+or use it from a checkout — put the checkout on `sys.path`, the way nibbles
+finds it — or install that with `pip install -e .`.
+
+## Releasing
+
+A push to `main` that changes `version` in `pyproject.toml` to one PyPI does
+not have yet is a release: `.github/workflows/release.yml` runs the suite,
+builds, publishes through PyPI's trusted publishing (no token is stored
+anywhere) and tags `v<version>`. Bump `__version__` in `bewitch/__init__.py`
+with it; a test holds the two together.
+
+## Developing
 
 ```sh
 make dev     # uv sync: pytest and hypothesis into .venv
@@ -102,4 +117,4 @@ Enable the hook once per clone: `git config core.hooksPath .githooks`.
 ## Licence
 
 MIT. Lip Gloss, charmtone, Bubbles and colorprofile are MIT-licensed by
-Charmbracelet, Inc.; their notice is in [THIRD_PARTY.md](THIRD_PARTY.md).
+Charmbracelet, Inc.; their notice is in [THIRD_PARTY.md](https://github.com/gsfernandes81/bewitch/blob/main/THIRD_PARTY.md).
