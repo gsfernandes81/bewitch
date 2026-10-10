@@ -4,10 +4,30 @@ version = "0.1.0"
 description = "A Python port of Charm's Lip Gloss and charmtone. Not affiliated with Charm."
 readme = "README.md"
 license = "MIT"
+# THIRD_PARTY.md carries Charm's MIT notices, which have to travel with every
+# copy of the parts ported from their libraries, the wheel included.
+license-files = ["LICENSE", "THIRD_PARTY.md"]
 requires-python = ">=3.11"
+authors = [{ name = "Gavin Fernandes" }]
+keywords = ["terminal", "tui", "lipgloss", "charm", "ansi", "colour", "layout"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Terminals",
+    "Topic :: Software Development :: User Interfaces",
+]
 # Deliberately empty: bewitch is stdlib only, so a phone can use it from a
 # checkout with nothing installed, the way ytq and dlq find each other.
 dependencies = []
+
+[project.urls]
+Source = "https://github.com/gsfernandes81/bewitch"
+Issues = "https://github.com/gsfernandes81/bewitch/issues"
+"Third-party notices" = "https://github.com/gsfernandes81/bewitch/blob/main/THIRD_PARTY.md"
 
 [build-system]
 requires = ["hatchling"]
@@ -15,6 +35,11 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["bewitch"]
+
+# The sdist is what a rebuild needs and no more: the package, its tests and
+# their golden renders, and the notes. Not the hooks or the lockfile.
+[tool.hatch.build.targets.sdist]
+include = ["bewitch", "tests", "docs", "README.md", "LICENSE", "THIRD_PARTY.md", "CLAUDE.md"]
 
 # The same two-group plan as ytq: `uv sync` installs dev (pure Python, so it
 # installs anywhere, the phone included); lint is separate because Termux

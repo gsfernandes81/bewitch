@@ -82,6 +82,14 @@ Decisions that travel with this code:
   arrives as separate keystrokes (`<`, `6`, `4`, `;`). **Termux answers
   DECRQM** (`\x1b[?1006;2$y`, checked on the phone), so on the phone blessed
   decodes the wheel; a test harness has to answer DECRQM too.
+- **Released to PyPI from `main`** (2026-10-10): a push to `main` whose
+  `pyproject.toml` version PyPI does not have yet is a release —
+  `.github/workflows/release.yml` tests, builds, publishes by trusted
+  publishing (environment `pypi`, no token anywhere) and tags `v<version>`.
+  `__version__` is bumped with it (`test_release.py` holds the two together).
+  The wheel carries `THIRD_PARTY.md` beside `LICENSE`, because Charm's MIT
+  notices travel with every copy. nibbles depends on it from PyPI, while a
+  checkout beside nibbles still wins on the phone.
 - **Standard library only.** The phone uses this from a checkout beside ytq
   and dlq, with nothing installed. A dependency would need a very good reason.
 
