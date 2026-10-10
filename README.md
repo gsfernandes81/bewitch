@@ -32,17 +32,15 @@ print(bubbles.header("ytq", ["lofi hip hop", "20"], width=40))
 
 ## What it is, and what it is not
 
-bewitch draws. It does not run an event loop or hold state — the app does
-that, on whatever TUI library it already uses, and bewitch gives it Crush's
-look. For apps that need nothing more than curses did, `bewitch.terminal`
-reads the keys and `bewitch.cursed` stands in for curses itself. A render is a `Block` of styled spans rather than a string full
+bewitch draws. It does not read keys, run an event loop or hold state —
+the app does that, on whatever TUI library it uses (blessed, for ytq and dlq),
+and bewitch gives it Crush's look. A render is a `Block` of styled spans rather than a string full
 of escape sequences, so the same render can go to:
 
 | Adapter | For |
 |---|---|
 | `bewitch.ansi` | `print()`, and anything that takes ANSI strings (blessed, Rich's `Text.from_ansi`) |
-| `bewitch.screen.Frame` | full-screen apps: a whole screen per frame, only the changed lines written, nothing at all when nothing changed |
-| `bewitch.cursed` | apps written for curses: `from bewitch import cursed as curses` keeps them running, drawn through `Canvas` and `Frame`, with `window.draw(y, x, block)` for bewitch renders |
+| `bewitch.screen.Frame` | full-screen apps, on blessed or anything that can write to the terminal: a whole screen per frame, only the changed lines written, nothing at all when nothing changed |
 | *(planned)* Rich | Textual and Rich |
 
 ## Modules
@@ -55,7 +53,6 @@ of escape sequences, so the same render can go to:
 | `bewitch.colorprofile` | colorprofile v0.4.3 | truecolor / 256 / 16 / none, from the environment; colours fitted to each |
 | `bewitch.theme` | — | colours by role (`primary`, `fg_muted`, `separator`…), Crush's mapping by default |
 | `bewitch.glyphs` | — | the glyphs Crush draws with, each tested on a phone, each with an ASCII stand-in |
-| `bewitch.terminal` | — | cbreak, the alternate screen, keypad and wheel modes, and a key decoder that never turns a mouse report into keys — standard library only, no terminal queries |
 
 ## The house style
 

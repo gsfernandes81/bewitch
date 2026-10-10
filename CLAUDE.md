@@ -61,26 +61,27 @@ Decisions that travel with this code:
   rate; the app's event loop decides when to draw. That keeps an idle screen
   silent, which ytq treats as a property worth a test.
 - **`screen.Frame` writes nothing for an unchanged screen** — no cursor
-  move, no sync marker. ytq's idle-screen test (zero bytes over idle seconds)
-  depends on it; `test_an_unchanged_screen_writes_nothing_at_all` holds it.
-- **No blessed — `bewitch.terminal` instead.** blessed was the first choice
-  for keys and modes. Measured 2026-10-10 under a pty: with a terminal that
-  answers a cursor-position request it starts in ~0.1 s; with one that answers
-  nothing it waits out its 5 s query timeout. What decided it is the wheel:
-  blessed decodes SGR mouse reports only if the terminal answers a DECRQM
-  query, and otherwise splits a wheel report into keystrokes (`<`, `6`, `4`,
-  `;`) — keys pressed by a flick, on screens where keys spend data. Whether
-  Termux answers DECRQM was not checked. prompt_toolkit's `Vt100Parser`
-  decodes split mouse reports correctly with no queries, but costs ~0.29 s to
-  import; `bewitch.terminal` costs ~0.02 s. `terminal.Decoder`'s rule: a byte
-  that began an escape sequence is never delivered as a key; unknown or
-  cut-off sequences are dropped whole. A property test holds that over
-  arbitrary splits. And nothing is asked of the terminal.
-- **`cursed` is a facade, not a fork of curses.** It covers the slice ytq and
-  dlq use, with curses' own constant values, so moving off curses is one
-  import and can be checked by the apps' existing suites before any screen is
-  restyled. Mouse reports outside `mousemask` are dropped inside `getch` —
-  that is where "a tap never presses a key" now lives.
+  move, no sync marker — so an app that redraws on every wakeup still costs
+  the terminal nothing while idle; ytq holds that as a property.
+  `test_an_unchanged_screen_writes_nothing_at_all` holds it here. Frame and
+  `ansi` are bewitch's two output adapters, and the only terminal-facing code
+  it has.
+- **bewitch draws; it does not read the keyboard.** Keys, raw mode, the
+  alternate screen and the mouse belong to the app's TUI library — blessed,
+  for ytq and dlq (2026-10-10). A curses stand-in (`bewitch.cursed`, with its
+  own key reader `bewitch.terminal`) was built to move ytq and dlq off curses
+  in one step; the owner judged it scope creep for a styling library, so it
+  lives on the `bewitched` branch with ytq's and dlq's `bewitched` branches,
+  and is not on main. Do not bring an input layer back here.
+- **What was learned about blessed, for whoever builds on it.** Measured
+  2026-10-10 under a pty: blessed 1.50 starts in ~0.1 s on a terminal that
+  answers a cursor-position request (CPR) and waits out its 5 s query timeout
+  on one that answers nothing — so a pyte-based test harness must answer CPR,
+  or set `BLESSED_QUERY_TIMEOUT_SECONDS`. It decodes SGR mouse reports only
+  when the terminal answers a DECRQM query; where it does not, a wheel report
+  arrives as separate keystrokes (`<`, `6`, `4`, `;`). **Termux answers
+  DECRQM** (`\x1b[?1006;2$y`, checked on the phone), so on the phone blessed
+  decodes the wheel; a test harness has to answer DECRQM too.
 - **Standard library only.** The phone uses this from a checkout beside ytq
   and dlq, with nothing installed. A dependency would need a very good reason.
 
@@ -98,10 +99,6 @@ runs. Offline, a few seconds.
   their limit, a wrap never loses a word, joins add up.
 - `test_screen.py` — the canvas never grows and never holds half a wide
   character; the frame writes only changed lines, and nothing for none.
-- `test_terminal.py` — the decoder's split-invariance and its rule about
-  escape bytes, as properties; then `cursed` driving a real app under a pty,
-  read back with pyte: keys arrive with curses' codes, a tap never arrives,
-  and an idle screen writes zero bytes.
 - `test_output.py` — the ANSI adapter, every recipe at exactly its width,
   the glyph rules, and the **reference renders**: byte-for-byte against
   `tests/golden/*.ans`. A deliberate visual change is re-recorded with
@@ -114,16 +111,15 @@ edge on its line.
 
 ## What is next
 
-- **ytq and dlq move to `cursed`** on their `bewitched` branches, then
-  restyle screen by screen with `Window.draw`. Not merged without the owner's
-  go-ahead.
+- **ytq and dlq**: restyled on their `bewitched` branches (drawn through the
+  stand-in on bewitch's `bewitched` branch), not merged. The owner is having
+  them rebuilt on blessed, with on-screen buttons, by other agents.
 - **Planned by the owner, for other agents (2026-10-10), not to be built
   here unasked:** ytq and dlq will get **on-screen buttons** alongside their
   keys, probably **scrollbars**, and their **touch (wheel) scrolling will be
-  removed**. Keep bewitch from closing that off: `terminal.Decoder` already
-  reports taps with cell positions, `cursed` delivers them to an app that puts
-  `BUTTON1_PRESSED` in its `mousemask`, and `getmouse()` gives the position.
-  What that work will want from bewitch is a button recipe and hit-testing —
+  removed**. Taps and their cell positions come from the TUI library
+  (blessed's mouse events). What that work will want from bewitch is a button
+  recipe and hit-testing —
   Lip Gloss v2's `Layer`/`Compositor` (ids on composed blocks, a hit lookup by
   cell) is the thing to port for it. The house style's "a tap never presses a
   key" describes today's screens; a button is the deliberate exception.

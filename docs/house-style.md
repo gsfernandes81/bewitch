@@ -105,8 +105,8 @@ tried in Termux with `python -m bewitch` before it goes in, and added to
 
 ## Motion and touch
 
-- An idle screen writes nothing. Draw through `screen.Frame` (or `cursed`),
-  which writes only changed lines and nothing at all when nothing changed.
+- An idle screen writes nothing. Draw through `screen.Frame`, which writes
+  only changed lines and nothing at all when nothing changed.
   Animate only what is selected (the marquee on the cursor row) or what is
   running (a spinner), and only while it is.
 - A flick scrolls; only a keypress acts. Ask for wheel events only
@@ -126,5 +126,6 @@ tried in Termux with `python -m bewitch` before it goes in, and added to
 | a box drawn with `+-|` or cleared space | a rounded `Style` box with `dialog_title` |
 | `=` against `·` progress | `bubbles.progress_bar` (`█`/`░`, both drawn one column wide on the phone) |
 
-`win.draw(y, x, block)` puts a bewitch render on a `cursed` window; the screen's
-loop, keys and logic do not change when its drawing does.
+Build the screen on a `Canvas`, compose each part where it goes, and hand the
+canvas's render to a `Frame`; the screen's loop, keys and logic do not change
+when its drawing does.
