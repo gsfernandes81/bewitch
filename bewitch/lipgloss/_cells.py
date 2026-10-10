@@ -92,6 +92,10 @@ def char_width(ch: str) -> int:
     ``•``), because that is how Termux and every Western terminal draw them,
     and it was checked on the phone this package was written for.
     """
+    if len(ch) != 1:
+        # A cluster — a character and the marks riding on it — is as wide as
+        # its parts added up, which is as wide as its base.
+        return sum(char_width(c) for c in ch)
     if unicodedata.combining(ch):
         return 0
     category = unicodedata.category(ch)

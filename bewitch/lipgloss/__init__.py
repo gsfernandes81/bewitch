@@ -14,6 +14,9 @@ The one thing that is not a straight port is what a render *is*: a
 :class:`Block` of styled spans, not a string full of escape sequences. See
 ``_cells.py`` for why; ``str(block)`` gives you the string.
 
+``Canvas`` is Lip Gloss v2's canvas without its layers and hit-testing:
+compose blocks at a position, later over earlier.
+
 Not ported (yet): Lip Gloss's ``table``, ``list`` and ``tree`` sub-packages,
 hyperlinks, underline styles and colours, and ``Blend2D``.
 """
@@ -30,6 +33,7 @@ from bewitch.lipgloss._cells import (
     width,
 )
 from bewitch.lipgloss.blending import blend_1d, foreground_gradient
+from bewitch.lipgloss.canvas import Canvas
 from bewitch.lipgloss.borders import (
     Border,
     ascii_border,
@@ -68,6 +72,7 @@ __all__ = [
     "TOP",
     "Block",
     "Border",
+    "Canvas",
     "Pen",
     "Position",
     "Span",

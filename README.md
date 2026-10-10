@@ -40,7 +40,7 @@ of escape sequences, so the same render can go to:
 | Adapter | For |
 |---|---|
 | `bewitch.ansi` | `print()`, and anything that takes ANSI strings (blessed, Rich's `Text.from_ansi`) |
-| *(planned)* blessed | full-screen apps on blessed: positioned lines, only the changed ones written |
+| `bewitch.screen.Frame` | full-screen apps (on blessed, or raw): a whole screen per frame, only the changed lines written, nothing at all when nothing changed |
 | *(planned)* curses | apps still on curses, which corrupts on raw escape sequences |
 | *(planned)* Rich | Textual and Rich |
 
@@ -48,7 +48,7 @@ of escape sequences, so the same render can go to:
 
 | Module | Ports | What it does |
 |---|---|---|
-| `bewitch.lipgloss` | Lip Gloss v2.0.6 | `Style` (colours, attributes, padding, margin, borders, width, height, alignment), the border sets, `join_horizontal` / `join_vertical` / `place`, `width` / `truncate`, `blend_1d` |
+| `bewitch.lipgloss` | Lip Gloss v2.0.6 | `Style` (colours, attributes, padding, margin, borders, width, height, alignment), the border sets, `join_horizontal` / `join_vertical` / `place`, `Canvas`, `width` / `truncate`, `blend_1d` |
 | `bewitch.charmtone` | charmtone v0.1.0 | Charm's 70 colours, Charm's names (`charmtone.Charple`), Charm's groups |
 | `bewitch.bubbles` | Bubbles v2.2.1 (drawing only) | spinners, help line, progress bar, paginator, scrollbar, list rows — and, from Crush, the header band, section rules, dialog titles, labels and status rows |
 | `bewitch.colorprofile` | colorprofile v0.4.3 | truecolor / 256 / 16 / none, from the environment; colours fitted to each |

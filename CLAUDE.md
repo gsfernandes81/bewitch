@@ -60,6 +60,9 @@ Decisions that travel with this code:
 - **Recipes hold no state and run no timers.** A spinner is frames and a
   rate; the app's event loop decides when to draw. That keeps an idle screen
   silent, which ytq treats as a property worth a test.
+- **`screen.Frame` writes nothing for an unchanged screen** — no cursor
+  move, no sync marker. ytq's idle-screen test (zero bytes over idle seconds)
+  depends on it; `test_an_unchanged_screen_writes_nothing_at_all` holds it.
 - **Standard library only.** The phone uses this from a checkout beside ytq
   and dlq, with nothing installed. A dependency would need a very good reason.
 
@@ -75,6 +78,8 @@ runs. Offline, a few seconds.
 - `test_layout.py` — the layout guarantees as properties: every render is a
   rectangle, a set width is the width you get, cuts and wraps never run past
   their limit, a wrap never loses a word, joins add up.
+- `test_screen.py` — the canvas never grows and never holds half a wide
+  character; the frame writes only changed lines, and nothing for none.
 - `test_output.py` — the ANSI adapter, every recipe at exactly its width,
   the glyph rules, and the **reference renders**: byte-for-byte against
   `tests/golden/*.ans`. A deliberate visual change is re-recorded with
@@ -87,9 +92,8 @@ edge on its line.
 
 ## What is next
 
-- **A blessed adapter**: draw a frame of positioned lines and write only the
-  lines that changed, so an unchanged frame writes nothing. ytq and dlq move
-  from curses to blessed on top of it, on their `bewitched` branches, and are
-  not merged without the owner's go-ahead.
+- **ytq and dlq move from curses to blessed** on their `bewitched` branches,
+  drawing through `Canvas` and `screen.Frame`; blessed reads the keys and the
+  wheel. Not merged without the owner's go-ahead.
 - Curses and Rich adapters, when something needs them.
 - Lip Gloss's `table`, `list` and `tree` sub-packages, `Blend2D`, hyperlinks.
