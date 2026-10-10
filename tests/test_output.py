@@ -108,6 +108,38 @@ def test_a_mark_never_shifts_the_title():
     assert plain.index("title") == marked.index("title")
 
 
+@given(st.integers(0, 80), lines, st.booleans(), st.booleans())
+def test_a_checkbox_is_always_exactly_its_width(width, label, checked, boxed):
+    block = bubbles.checkbox(label, checked, width, boxed=boxed)
+    assert block.width == width
+    assert block.height == (3 if boxed else 1)
+    for line in block.lines:
+        assert string_width("".join(s.text for s in line)) == width
+
+
+@given(st.integers(1, 80), lines, st.booleans(), st.booleans())
+def test_a_checkbox_cuts_its_label_before_its_mark(width, label, checked, boxed):
+    mark = glyphs.CHECK if checked else glyphs.BULLET
+    assert mark in bubbles.checkbox(label, checked, width, boxed=boxed).plain()
+
+
+@given(st.integers(0, 80), lines, st.booleans())
+def test_ticking_a_checkbox_never_shifts_its_label(width, label, boxed):
+    ticked = bubbles.checkbox(label, True, width, boxed=boxed).plain()
+    unticked = bubbles.checkbox(label, False, width, boxed=boxed).plain()
+    assert ticked.replace(glyphs.CHECK, glyphs.BULLET) == unticked.replace(
+        glyphs.CHECK, glyphs.BULLET
+    )
+
+
+def test_without_colour_a_checkbox_still_says_whether_it_is_ticked():
+    for boxed in (False, True):
+        ticked = ansi.render(bubbles.checkbox("go", True, 12, boxed), Profile.ASCII)
+        unticked = ansi.render(bubbles.checkbox("go", False, 12, boxed), Profile.ASCII)
+        assert glyphs.CHECK in ticked and "\x1b[0;1m" in ticked
+        assert glyphs.BULLET in unticked and "\x1b[0;1m" not in unticked
+
+
 @given(
     widths,
     st.lists(

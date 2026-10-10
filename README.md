@@ -49,7 +49,7 @@ of escape sequences, so the same render can go to:
 |---|---|---|
 | `bewitch.lipgloss` | Lip Gloss v2.0.6 | `Style` (colours, attributes, padding, margin, borders, width, height, alignment), the border sets, `join_horizontal` / `join_vertical` / `place`, `Canvas`, `width` / `truncate`, `blend_1d` |
 | `bewitch.charmtone` | charmtone v0.1.0 | Charm's 70 colours, Charm's names (`charmtone.Charple`), Charm's groups |
-| `bewitch.bubbles` | Bubbles v2.2.1 (drawing only) | spinners, help line, progress bar, paginator, scrollbar, list rows — and, from Crush, the header band, section rules, dialog titles, labels and status rows |
+| `bewitch.bubbles` | Bubbles v2.2.1 (drawing only) | spinners, help line, progress bar, paginator, scrollbar, list rows; from huh, the checkbox; and, from Crush, the header band, section rules, dialog titles, labels and status rows |
 | `bewitch.colorprofile` | colorprofile v0.4.3 | truecolor / 256 / 16 / none, from the environment; colours fitted to each |
 | `bewitch.theme` | — | colours by role (`primary`, `fg_muted`, `separator`…), Crush's mapping by default |
 | `bewitch.glyphs` | — | the glyphs Crush draws with, each tested on a phone, each with an ASCII stand-in |

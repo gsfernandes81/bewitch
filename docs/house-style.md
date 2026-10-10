@@ -69,7 +69,8 @@ True)` draws it. Never reverse video in a themed screen; never an arrow or a
 | already have it / done | `✓` in `success`, the row's text dimmed a step |
 | failed | `×` in `error` |
 | pending / in progress | `●` in `success_most_subtle`, or a spinner in `secondary` |
-| on / off choice | `◉` / `○` |
+| one choice of several | `◉` / `○` |
+| a toggle (on / off) | `bubbles.checkbox`: `✓` in `success`, label bold / `•` in `fg_most_subtle`, label muted; `boxed=True` beside buttons |
 | a word that must stand out | `bubbles.tag(text, kind)`: ` 720p `, ` PAID `, ` ERROR ` |
 
 A mark column is kept even when empty, so marking a row never shifts its text.

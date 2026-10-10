@@ -9,7 +9,8 @@ state it should draw and a width, and returns a
 
 :mod:`bewitch.bubbles.crush` holds the pieces Bubbles does not have but
 Crush's screens are built from: the header band, section rules, dialog
-titles, labels and status rows.
+titles, labels and status rows. :mod:`bewitch.bubbles.huh` holds the one
+form control drawn the way Charm's huh draws it: the checkbox.
 """
 
 from bewitch.bubbles import spinner
@@ -22,6 +23,7 @@ from bewitch.bubbles.crush import (
     tag,
     wait_box,
 )
+from bewitch.bubbles.huh import checkbox
 from bewitch.bubbles.spinner import Spinner
 from bewitch.bubbles.widgets import (
     list_item,
@@ -34,6 +36,7 @@ from bewitch.bubbles.widgets import (
 
 __all__ = [
     "Spinner",
+    "checkbox",
     "dialog",
     "dialog_title",
     "header",

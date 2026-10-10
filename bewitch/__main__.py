@@ -192,6 +192,18 @@ def pieces(width: int) -> Block:
         ),
         bubbles.paginator_dots(1, 5),
         Block.text(""),
+        bubbles.checkbox("Open it when done", True, width),
+        bubbles.checkbox("Keep the partial file", False, width),
+        join_horizontal(
+            TOP,
+            Style()
+            .margin_right(1)
+            .render(bubbles.checkbox("Subtitles", True, (width - 1) // 2, boxed=True)),
+            bubbles.checkbox(
+                "Audio only", False, width - 1 - (width - 1) // 2, boxed=True
+            ),
+        ),
+        Block.text(""),
         bubbles.dialog(
             "Queue it?",
             "Chillhop Essentials · Winter 2025, 720p, about 410 MiB tonight.",
